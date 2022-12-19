@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.jsy.mapper.UserJsyMapper">
+    
+    <resultMap type="UserJsy" id="UserJsyResult">
+        <result property="jsyId"    column="jsy_id"    />
+        <result property="jsyxm"    column="jsyxm"    />
+        <result property="jszh"    column="jszh"    />
+        <result property="sfzhm"    column="sfzhm"    />
+        <result property="zz"    column="zz"    />
+        <result property="cclzDate"    column="cclz_date"    />
+        <result property="nsdqDate"    column="nsdq_date"    />
+        <result property="zjcx"    column="zjcx"    />
+        <result property="xxq"    column="xxq"    />
+        <result property="jtsg"    column="jtsg"    />
+        <result property="jszzm"    column="jszzm"    />
+        <result property="jszfm"    column="jszfm"    />
+    </resultMap>
+
+    <sql id="selectUserJsyVo">
+        select jsy_id, jsyxm, jszh, sfzhm, zz, cclz_date, nsdq_date, zjcx, xxq, jtsg, jszzm, jszfm from user_jsy
+    </sql>
+
+    <select id="selectUserJsyList" parameterType="UserJsy" resultMap="UserJsyResult">
+        <include refid="selectUserJsyVo"/>
+        <where>  
+            <if test="jsyxm != null  and jsyxm != ''"> and jsyxm like concat('%', #{jsyxm}, '%')</if>
+            <if test="jszh != null  and jszh != ''"> and jszh like concat('%', #{jszh}, '%')</if>
+            <if test="sfzhm != null  and sfzhm != ''"> and sfzhm like concat('%', #{sfzhm}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectUserJsyByJsyId" parameterType="Long" resultMap="UserJsyResult">
+        <include refid="selectUserJsyVo"/>
+        where jsy_id = #{jsyId}
+    </select>
+        
+    <insert id="insertUserJsy" parameterType="UserJsy" useGeneratedKeys="true" keyProperty="jsyId">
+        insert into user_jsy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="jsyxm != null">jsyxm,</if>
+            <if test="jszh != null">jszh,</if>
+            <if test="sfzhm != null">sfzhm,</if>
+            <if test="zz != null">zz,</if>
+            <if test="cclzDate != null">cclz_date,</if>
+            <if test="nsdqDate != null">nsdq_date,</if>
+            <if test="zjcx != null">zjcx,</if>
+            <if test="xxq != null">xxq,</if>
+            <if test="jtsg != null">jtsg,</if>
+            <if test="jszzm != null">jszzm,</if>
+            <if test="jszfm != null">jszfm,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="jsyxm != null">#{jsyxm},</if>
+            <if test="jszh != null">#{jszh},</if>
+            <if test="sfzhm != null">#{sfzhm},</if>
+            <if test="zz != null">#{zz},</if>
+            <if test="cclzDate != null">#{cclzDate},</if>
+            <if test="nsdqDate != null">#{nsdqDate},</if>
+            <if test="zjcx != null">#{zjcx},</if>
+            <if test="xxq != null">#{xxq},</if>
+            <if test="jtsg != null">#{jtsg},</if>
+            <if test="jszzm != null">#{jszzm},</if>
+            <if test="jszfm != null">#{jszfm},</if>
+         </trim>
+    </insert>
+
+    <update id="updateUserJsy" parameterType="UserJsy">
+        update user_jsy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="jsyxm != null">jsyxm = #{jsyxm},</if>
+            <if test="jszh != null">jszh = #{jszh},</if>
+            <if test="sfzhm != null">sfzhm = #{sfzhm},</if>
+            <if test="zz != null">zz = #{zz},</if>
+            <if test="cclzDate != null">cclz_date = #{cclzDate},</if>
+            <if test="nsdqDate != null">nsdq_date = #{nsdqDate},</if>
+            <if test="zjcx != null">zjcx = #{zjcx},</if>
+            <if test="xxq != null">xxq = #{xxq},</if>
+            <if test="jtsg != null">jtsg = #{jtsg},</if>
+            <if test="jszzm != null">jszzm = #{jszzm},</if>
+            <if test="jszfm != null">jszfm = #{jszfm},</if>
+        </trim>
+        where jsy_id = #{jsyId}
+    </update>
+
+    <delete id="deleteUserJsyByJsyId" parameterType="Long">
+        delete from user_jsy where jsy_id = #{jsyId}
+    </delete>
+
+    <delete id="deleteUserJsyByJsyIds" parameterType="String">
+        delete from user_jsy where jsy_id in 
+        <foreach item="jsyId" collection="array" open="(" separator="," close=")">
+            #{jsyId}
+        </foreach>
+    </delete>
+
+</mapper>

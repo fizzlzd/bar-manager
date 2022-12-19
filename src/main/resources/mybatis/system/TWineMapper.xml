@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.wine.mapper.TWineMapper">
+    
+    <resultMap type="TWine" id="TWineResult">
+        <result property="id"    column="id"    />
+        <result property="wineCode"    column="wine_code"    />
+        <result property="wineName"    column="wine_name"    />
+        <result property="wineType"    column="wine_type"    />
+        <result property="price"    column="price"    />
+    </resultMap>
+
+    <sql id="selectTWineVo">
+        select id, wine_code, wine_name, wine_type, price from t_wine
+    </sql>
+
+    <select id="selectTWineList" parameterType="TWine" resultMap="TWineResult">
+        <include refid="selectTWineVo"/>
+        <where>  
+            <if test="wineCode != null  and wineCode != ''"> and wine_code = #{wineCode}</if>
+            <if test="wineName != null  and wineName != ''"> and wine_name like concat('%', #{wineName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTWineById" parameterType="Long" resultMap="TWineResult">
+        <include refid="selectTWineVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTWine" parameterType="TWine" useGeneratedKeys="true" keyProperty="id">
+        insert into t_wine
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wineCode != null">wine_code,</if>
+            <if test="wineName != null">wine_name,</if>
+            <if test="wineType != null">wine_type,</if>
+            <if test="price != null">price,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="wineCode != null">#{wineCode},</if>
+            <if test="wineName != null">#{wineName},</if>
+            <if test="wineType != null">#{wineType},</if>
+            <if test="price != null">#{price},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTWine" parameterType="TWine">
+        update t_wine
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="wineCode != null">wine_code = #{wineCode},</if>
+            <if test="wineName != null">wine_name = #{wineName},</if>
+            <if test="wineType != null">wine_type = #{wineType},</if>
+            <if test="price != null">price = #{price},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTWineById" parameterType="Long">
+        delete from t_wine where id = #{id}
+    </delete>
+
+    <delete id="deleteTWineByIds" parameterType="String">
+        delete from t_wine where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.counter.mapper.TCounterMapper">
+    
+    <resultMap type="TCounter" id="TCounterResult">
+        <result property="id"    column="id"    />
+        <result property="counterName"    column="counter_name"    />
+        <result property="waiter"    column="waiter"    />
+        <result property="basic"    column="basic"    />
+        <result property="state"    column="state"    />
+    </resultMap>
+
+    <sql id="selectTCounterVo">
+        select id, counter_name, waiter, basic, state from t_counter
+    </sql>
+
+    <select id="selectTCounterList" parameterType="TCounter" resultMap="TCounterResult">
+        <include refid="selectTCounterVo"/>
+        <where>  
+            <if test="counterName != null  and counterName != ''"> and counter_name like concat('%', #{counterName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTCounterById" parameterType="Long" resultMap="TCounterResult">
+        <include refid="selectTCounterVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTCounter" parameterType="TCounter" useGeneratedKeys="true" keyProperty="id">
+        insert into t_counter
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="counterName != null">counter_name,</if>
+            <if test="waiter != null">waiter,</if>
+            <if test="basic != null">basic,</if>
+            <if test="state != null">state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="counterName != null">#{counterName},</if>
+            <if test="waiter != null">#{waiter},</if>
+            <if test="basic != null">#{basic},</if>
+            <if test="state != null">#{state},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTCounter" parameterType="TCounter">
+        update t_counter
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="counterName != null">counter_name = #{counterName},</if>
+            <if test="waiter != null">waiter = #{waiter},</if>
+            <if test="basic != null">basic = #{basic},</if>
+            <if test="state != null">state = #{state},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTCounterById" parameterType="Long">
+        delete from t_counter where id = #{id}
+    </delete>
+
+    <delete id="deleteTCounterByIds" parameterType="String">
+        delete from t_counter where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

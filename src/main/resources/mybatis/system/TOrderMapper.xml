@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.order.mapper.TOrderMapper">
+    
+    <resultMap type="TOrder" id="TOrderResult">
+        <result property="id"    column="id"    />
+        <result property="orderCode"    column="order_code"    />
+        <result property="counterName"    column="counter_name"    />
+        <result property="price"    column="price"    />
+        <result property="count"    column="count"    />
+        <result property="date"    column="date"    />
+    </resultMap>
+
+    <sql id="selectTOrderVo">
+        select id, order_code, counter_name, price, count, date from t_order
+    </sql>
+
+    <select id="selectTOrderList" parameterType="TOrder" resultMap="TOrderResult">
+        <include refid="selectTOrderVo"/>
+        <where>  
+            <if test="orderCode != null  and orderCode != ''"> and order_code like concat('%', #{orderCode}, '%')</if>
+            <if test="counterName != null  and counterName != ''"> and counter_name like concat('%', #{counterName}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectTOrderById" parameterType="Long" resultMap="TOrderResult">
+        <include refid="selectTOrderVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTOrder" parameterType="TOrder" useGeneratedKeys="true" keyProperty="id">
+        insert into t_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">order_code,</if>
+            <if test="counterName != null">counter_name,</if>
+            <if test="price != null">price,</if>
+            <if test="count != null">count,</if>
+            <if test="date != null">date,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="orderCode != null">#{orderCode},</if>
+            <if test="counterName != null">#{counterName},</if>
+            <if test="price != null">#{price},</if>
+            <if test="count != null">#{count},</if>
+            <if test="date != null">#{date},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTOrder" parameterType="TOrder">
+        update t_order
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="orderCode != null">order_code = #{orderCode},</if>
+            <if test="counterName != null">counter_name = #{counterName},</if>
+            <if test="price != null">price = #{price},</if>
+            <if test="count != null">count = #{count},</if>
+            <if test="date != null">date = #{date},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTOrderById" parameterType="Long">
+        delete from t_order where id = #{id}
+    </delete>
+
+    <delete id="deleteTOrderByIds" parameterType="String">
+        delete from t_order where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
